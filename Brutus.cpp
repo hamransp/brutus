@@ -534,106 +534,106 @@ inline void prepareRipemdBlock(const uint8_t* src,uint8_t* out)
     out[63]=uint8_t(bitLen    );
 }
 
-static void computeHash160BatchBinSingle(int nKeys,
-                                         uint8_t pub[][33],
-                                         uint8_t outHash[][20])
-{
-    std::array<std::array<uint8_t,64>,HASH_BATCH_SIZE> shaIn;
-    std::array<std::array<uint8_t,32>,HASH_BATCH_SIZE> shaOut;
-    std::array<std::array<uint8_t,64>,HASH_BATCH_SIZE> ripIn;
-    std::array<std::array<uint8_t,20>,HASH_BATCH_SIZE> ripOut;
+// static void computeHash160BatchBinSingle(int nKeys,
+//                                          uint8_t pub[][33],
+//                                          uint8_t outHash[][20])
+// {
+//     std::array<std::array<uint8_t,64>,HASH_BATCH_SIZE> shaIn;
+//     std::array<std::array<uint8_t,32>,HASH_BATCH_SIZE> shaOut;
+//     std::array<std::array<uint8_t,64>,HASH_BATCH_SIZE> ripIn;
+//     std::array<std::array<uint8_t,20>,HASH_BATCH_SIZE> ripOut;
 
-    size_t nBatches=(nKeys+HASH_BATCH_SIZE-1)/HASH_BATCH_SIZE;
+//     size_t nBatches=(nKeys+HASH_BATCH_SIZE-1)/HASH_BATCH_SIZE;
 
-    for (size_t b = 0; b < nBatches; ++b) {
-        size_t cnt = std::min<size_t>(HASH_BATCH_SIZE, nKeys - b*HASH_BATCH_SIZE);
+//     for (size_t b = 0; b < nBatches; ++b) {
+//         size_t cnt = std::min<size_t>(HASH_BATCH_SIZE, nKeys - b*HASH_BATCH_SIZE);
 
-        for (size_t i = 0; i < cnt; ++i)
-            prepareShaBlock(pub[b*HASH_BATCH_SIZE+i],33,shaIn[i].data());
-        for (size_t i = cnt; i < HASH_BATCH_SIZE; ++i)
-            std::memcpy(shaIn[i].data(),shaIn[0].data(),64);
+//         for (size_t i = 0; i < cnt; ++i)
+//             prepareShaBlock(pub[b*HASH_BATCH_SIZE+i],33,shaIn[i].data());
+//         for (size_t i = cnt; i < HASH_BATCH_SIZE; ++i)
+//             std::memcpy(shaIn[i].data(),shaIn[0].data(),64);
 
-        const uint8_t* in[HASH_BATCH_SIZE];
-        uint8_t*       out[HASH_BATCH_SIZE];
-        for (int i = 0; i < HASH_BATCH_SIZE; ++i) {
-            in[i]=shaIn[i].data();
-            out[i]=shaOut[i].data();
-        }
-        sha256avx2_8B(in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7],
-                      out[0],out[1],out[2],out[3],out[4],out[5],out[6],out[7]);
+//         const uint8_t* in[HASH_BATCH_SIZE];
+//         uint8_t*       out[HASH_BATCH_SIZE];
+//         for (int i = 0; i < HASH_BATCH_SIZE; ++i) {
+//             in[i]=shaIn[i].data();
+//             out[i]=shaOut[i].data();
+//         }
+//         sha256avx2_8B(in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7],
+//                       out[0],out[1],out[2],out[3],out[4],out[5],out[6],out[7]);
 
-        for (size_t i = 0; i < cnt; ++i)
-            prepareRipemdBlock(shaOut[i].data(),ripIn[i].data());
-        for (size_t i = cnt; i < HASH_BATCH_SIZE; ++i)
-            std::memcpy(ripIn[i].data(),ripIn[0].data(),64);
+//         for (size_t i = 0; i < cnt; ++i)
+//             prepareRipemdBlock(shaOut[i].data(),ripIn[i].data());
+//         for (size_t i = cnt; i < HASH_BATCH_SIZE; ++i)
+//             std::memcpy(ripIn[i].data(),ripIn[0].data(),64);
 
-        for (int i = 0; i < HASH_BATCH_SIZE; ++i) {
-            in[i]=ripIn[i].data();
-            out[i]=ripOut[i].data();
-        }
-        ripemd160avx2::ripemd160avx2_32(
-            (unsigned char*)in[0],(unsigned char*)in[1],(unsigned char*)in[2],
-            (unsigned char*)in[3],(unsigned char*)in[4],(unsigned char*)in[5],
-            (unsigned char*)in[6],(unsigned char*)in[7],
-            out[0],out[1],out[2],out[3],out[4],out[5],out[6],out[7]);
+//         for (int i = 0; i < HASH_BATCH_SIZE; ++i) {
+//             in[i]=ripIn[i].data();
+//             out[i]=ripOut[i].data();
+//         }
+//         ripemd160avx2::ripemd160avx2_32(
+//             (unsigned char*)in[0],(unsigned char*)in[1],(unsigned char*)in[2],
+//             (unsigned char*)in[3],(unsigned char*)in[4],(unsigned char*)in[5],
+//             (unsigned char*)in[6],(unsigned char*)in[7],
+//             out[0],out[1],out[2],out[3],out[4],out[5],out[6],out[7]);
 
-        for (size_t i = 0; i < cnt; ++i)
-            std::memcpy(outHash[b*HASH_BATCH_SIZE+i],ripOut[i].data(),20);
-    }
-}
-static void computeHash160BatchBinUncompressed(int nKeys,
-                                               uint8_t pub[][65], 
-                                               uint8_t outHash[][20])
-{
-    std::array<std::array<uint8_t,32>,HASH_BATCH_SIZE> shaOut;
-    std::array<std::array<uint8_t,64>,HASH_BATCH_SIZE> ripIn;
-    std::array<std::array<uint8_t,20>,HASH_BATCH_SIZE> ripOut;
+//         for (size_t i = 0; i < cnt; ++i)
+//             std::memcpy(outHash[b*HASH_BATCH_SIZE+i],ripOut[i].data(),20);
+//     }
+// }
+// static void computeHash160BatchBinUncompressed(int nKeys,
+//                                                uint8_t pub[][65], 
+//                                                uint8_t outHash[][20])
+// {
+//     std::array<std::array<uint8_t,32>,HASH_BATCH_SIZE> shaOut;
+//     std::array<std::array<uint8_t,64>,HASH_BATCH_SIZE> ripIn;
+//     std::array<std::array<uint8_t,20>,HASH_BATCH_SIZE> ripOut;
 
-    size_t nBatches = (nKeys + HASH_BATCH_SIZE - 1) / HASH_BATCH_SIZE;
+//     size_t nBatches = (nKeys + HASH_BATCH_SIZE - 1) / HASH_BATCH_SIZE;
 
-    for (size_t b = 0; b < nBatches; ++b) {
-        size_t cnt = std::min<size_t>(HASH_BATCH_SIZE, nKeys - b * HASH_BATCH_SIZE);
+//     for (size_t b = 0; b < nBatches; ++b) {
+//         size_t cnt = std::min<size_t>(HASH_BATCH_SIZE, nKeys - b * HASH_BATCH_SIZE);
 
-        // Menggunakan AVX2 untuk hashing SHA256 untuk uncompressed keys
-        for (size_t i = 0; i < cnt; ++i) {
-            prepareShaBlockUncompressed(pub[b * HASH_BATCH_SIZE + i], shaOut[i].data());
-        }
+//         // Menggunakan AVX2 untuk hashing SHA256 untuk uncompressed keys
+//         for (size_t i = 0; i < cnt; ++i) {
+//             prepareShaBlockUncompressed(pub[b * HASH_BATCH_SIZE + i], shaOut[i].data());
+//         }
 
-        // Lakukan pemrosesan untuk batch yang ada
-        const uint8_t* in[HASH_BATCH_SIZE];
-        uint8_t* out[HASH_BATCH_SIZE];
-        for (int i = 0; i < HASH_BATCH_SIZE; ++i) {
-            in[i] = shaOut[i].data();
-            out[i] = shaOut[i].data(); // Hasil SHA256 langsung di-shaOut
-        }
+//         // Lakukan pemrosesan untuk batch yang ada
+//         const uint8_t* in[HASH_BATCH_SIZE];
+//         uint8_t* out[HASH_BATCH_SIZE];
+//         for (int i = 0; i < HASH_BATCH_SIZE; ++i) {
+//             in[i] = shaOut[i].data();
+//             out[i] = shaOut[i].data(); // Hasil SHA256 langsung di-shaOut
+//         }
 
-        // Gantikan OpenSSL SHA256 dengan SHA256 AVX2
-        sha256avx2_8B(in[0], in[1], in[2], in[3], in[4], in[5], in[6], in[7],
-                      out[0], out[1], out[2], out[3], out[4], out[5], out[6], out[7]);
+//         // Gantikan OpenSSL SHA256 dengan SHA256 AVX2
+//         sha256avx2_8B(in[0], in[1], in[2], in[3], in[4], in[5], in[6], in[7],
+//                       out[0], out[1], out[2], out[3], out[4], out[5], out[6], out[7]);
 
-        // Proses RIPEMD160 seperti biasa
-        for (size_t i = 0; i < cnt; ++i)
-            prepareRipemdBlock(shaOut[i].data(), ripIn[i].data());
-        for (size_t i = cnt; i < HASH_BATCH_SIZE; ++i)
-            std::memcpy(ripIn[i].data(), ripIn[0].data(), 64);
+//         // Proses RIPEMD160 seperti biasa
+//         for (size_t i = 0; i < cnt; ++i)
+//             prepareRipemdBlock(shaOut[i].data(), ripIn[i].data());
+//         for (size_t i = cnt; i < HASH_BATCH_SIZE; ++i)
+//             std::memcpy(ripIn[i].data(), ripIn[0].data(), 64);
 
-        for (int i = 0; i < HASH_BATCH_SIZE; ++i) {
-            in[i] = ripIn[i].data();
-            out[i] = ripOut[i].data();
-        }
+//         for (int i = 0; i < HASH_BATCH_SIZE; ++i) {
+//             in[i] = ripIn[i].data();
+//             out[i] = ripOut[i].data();
+//         }
 
-        // Proses RIPEMD160 AVX2
-        ripemd160avx2::ripemd160avx2_32(
-            (unsigned char*)in[0], (unsigned char*)in[1], (unsigned char*)in[2],
-            (unsigned char*)in[3], (unsigned char*)in[4], (unsigned char*)in[5],
-            (unsigned char*)in[6], (unsigned char*)in[7],
-            out[0], out[1], out[2], out[3], out[4], out[5], out[6], out[7]);
+//         // Proses RIPEMD160 AVX2
+//         ripemd160avx2::ripemd160avx2_32(
+//             (unsigned char*)in[0], (unsigned char*)in[1], (unsigned char*)in[2],
+//             (unsigned char*)in[3], (unsigned char*)in[4], (unsigned char*)in[5],
+//             (unsigned char*)in[6], (unsigned char*)in[7],
+//             out[0], out[1], out[2], out[3], out[4], out[5], out[6], out[7]);
 
-        // Salin hasil RIPEMD160 ke outHash
-        for (size_t i = 0; i < cnt; ++i)
-            std::memcpy(outHash[b * HASH_BATCH_SIZE + i], ripOut[i].data(), 20);
-    }
-}
+//         // Salin hasil RIPEMD160 ke outHash
+//         for (size_t i = 0; i < cnt; ++i)
+//             std::memcpy(outHash[b * HASH_BATCH_SIZE + i], ripOut[i].data(), 20);
+//     }
+// }
 
 
 // ✅ UPDATE: Unified hash computation function

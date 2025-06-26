@@ -1,7 +1,9 @@
 #ifndef SHA256_AVX2_H
 #define SHA256_AVX2_H
 
+// #include <cstdint>
 #include <cstdint>
+#include <cstddef>
 
 void sha256avx2_8B(
     const uint8_t* data0, const uint8_t* data1, const uint8_t* data2, const uint8_t* data3,
