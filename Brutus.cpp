@@ -30,7 +30,7 @@
 #include <map>
 
 #include "bloom_checker.h"
-#include <openssl/sha.h>
+// #include <openssl/sha.h>
 
 
 static constexpr int    POINTS_BATCH_SIZE       = 256;
