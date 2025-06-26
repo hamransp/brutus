@@ -18,13 +18,18 @@ CXXFLAGS = -m64 -std=c++17 -Ofast -march=native -mtune=native \
            -Wno-strict-aliasing -Wno-unused-but-set-variable \
            -funroll-loops -ftree-vectorize -fstrict-aliasing \
            -fno-semantic-interposition -fvect-cost-model=unlimited \
-           -fno-trapping-math -fipa-ra -flto -fassociative-math \
+           -fno-trapping-math -fipa-ra -fassociative-math \
            -fopenmp -mavx2 -mbmi2 -madx -fwrapv \
            -fomit-frame-pointer -fpredictive-commoning -fgcse-sm -fgcse-las \
            -fmodulo-sched -fmodulo-sched-allow-regmoves -funsafe-math-optimizations
 
 # OpenSSL linking flags
-LDFLAGS = -lssl -lcrypto
+# LDFLAGS = -lssl -lcrypto
+
+# LTO
+ifeq ($(LTO),1)
+  CXXFLAGS += -flto=auto
+endif
 
 # Source files - TAMBAHKAN bloom_checker.cpp
 SRCS = Brutus.cpp SECP256K1.cpp Int.cpp IntGroup.cpp IntMod.cpp \
@@ -39,7 +44,7 @@ TARGET = brutus
 
 # Link the object files to create the executable and then delete .o files
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) 
 	rm -f $(OBJS) && chmod +x $(TARGET)
 
 # Compile each source file into an object file
@@ -80,7 +85,7 @@ CXXFLAGS = -m64 -std=c++17 -Ofast -mssse3 -Wall -Wextra \
            -mavx2 -mbmi2 -madx -fwrapv
 
 # OpenSSL linking flags
-LDFLAGS = -lssl -lcrypto -lcrypt32 -lws2_32 -lgdi32 -ladvapi32 -luser32
+# LDFLAGS = -lssl -lcrypto -lcrypt32 -lws2_32 -lgdi32 -ladvapi32 -luser32
 
 
 # Add -static flag if STATIC_LINKING is enabled
@@ -107,7 +112,7 @@ all: $(TARGET)
 
 # Link the object files to create the executable - PERBAIKAN DISINI: TAMBAHKAN $(LDFLAGS)
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) 
 	rm -f $(OBJS)
 
 # Compile each source file into an object file
