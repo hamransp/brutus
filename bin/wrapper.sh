@@ -99,7 +99,7 @@ fi
 
 # Log informasi awal
 log "INFO" "==============================================="
-log "INFO" "Cireng Bitcoin Key Scanner Wrapper"
+log "INFO" "Brutus Bitcoin Key Scanner Wrapper"
 log "INFO" "Mulai pada: $(date)"
 log "INFO" "System: $(uname -a)"
 log "INFO" "Direktori: $BRUTUS_DIR"
@@ -111,15 +111,15 @@ trap 'cleanup 1' INT TERM
 trap 'log "ERROR" "Received signal SIGABRT or SEGFAULT"; cleanup 2' ABRT SEGV
 
 # Periksa apakah executable ada
-if [[ ! -x "./cireng" ]] && [[ ! -x "./cireng.exe" ]]; then
+if [[ ! -x "./brutus" ]] && [[ ! -x "./brutus.exe" ]]; then
     log "ERROR" "Executable Brutus tidak ditemukan atau tidak executable"
     exit 1
 fi
 
 # Tentukan executable berdasarkan platform
-BRUTUS_EXE="./cireng"
-if [[ -f "./cireng.exe" ]]; then
-    BRUTUS_EXE="./cireng.exe"
+BRUTUS_EXE="./brutus"
+if [[ -f "./brutus.exe" ]]; then
+    BRUTUS_EXE="./brutus.exe"
 fi
 
 # -----------------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ log "INFO" "Menjalankan command: $CMD"
 eval "$CMD" &
 BRUTUS_PID=$!
 
-log "INFO" "Cireng berjalan dengan PID: $BRUTUS_PID"
+log "INFO" "Brutus berjalan dengan PID: $BRUTUS_PID"
 
 
 # Tunggu proses Brutus selesai
@@ -171,10 +171,10 @@ BRUTUS_EXIT_CODE=$?
 
 # Log hasil eksekusi
 if [[ $BRUTUS_EXIT_CODE -eq 0 ]]; then
-    log "INFO" "Cireng selesai dengan sukses (kode: $BRUTUS_EXIT_CODE)"
+    log "INFO" "Brutus selesai dengan sukses (kode: $BRUTUS_EXIT_CODE)"
     exit 0
 else
-    log "WARNING" "Cireng keluar dengan kode error: $BRUTUS_EXIT_CODE"
+    log "WARNING" "Brutus keluar dengan kode error: $BRUTUS_EXIT_CODE"
     
     # Tunggu beberapa saat sebelum restart
     log "INFO" "Menunggu 5 detik sebelum restart..."
