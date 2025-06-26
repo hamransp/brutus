@@ -1,0 +1,10 @@
+# Konfigurasi Notifikasi Brutus
+# Format: key=value
+
+# URL endpoint untuk notifikasi (wajib untuk mengaktifkan notifikasi)
+endpoint_url=https://wanotif.arungpalakka.com/api/v1/whatsapp/send
+
+# Nomor telepon untuk notifikasi (opsional)
+phone_number=081355554144
+
+# Catatan: Baris yang dimulai dengan # adalah komentar dan akan diabaikan
