@@ -17,8 +17,8 @@ cd "$BRUTUS_DIR" || {
 # Parameter pencarian (wajib diisi)
 
 #20000000:ffffffffffffffffffffffffffffffffffffffff # adalah entropy bit 30 sampai bit 160
-RANGE="800000000000000:ffffffffffffffffffffffffffffffff"
-BIT_AREA="60:128"          # Rentang bit untuk pencarian (format: start:end)
+RANGE="1000000000000000000000000000000000000000000000000000000000000000:fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140" 
+BIT_AREA="256:256"          # Rentang bit untuk pencarian (format: start:end)
 # Parameter opsional
 FOCUS="0:100"                # Rentang fokus (format: start%:end%)
 NUM_CHUNKS="50000"            # Jumlah chunk untuk mode random
